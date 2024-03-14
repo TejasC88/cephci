@@ -655,14 +655,15 @@ class GenerateServiceSpec:
 
         LOG.info(f"Spec yaml file content:\n{spec_content}")
         # Create spec yaml file
-        temp_file = tempfile.NamedTemporaryFile(suffix=".yaml")
+        #temp_file = tempfile.NamedTemporaryFile(suffix=".yaml")
+        temp_file = "/tmp/spec_tmp.yaml"
         spec_file = self.node.node.remote_file(
-            sudo=True, file_name=temp_file.name, file_mode="w"
+            sudo=True, file_name=temp_file, file_mode="w"
         )
         spec_file.write(spec_content)
         spec_file.flush()
 
-        return temp_file.name
+        return temp_file
 
     def create_snmp_conf_file(self):
         """
