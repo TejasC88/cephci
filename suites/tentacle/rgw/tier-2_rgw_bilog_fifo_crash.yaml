@@ -1,0 +1,17 @@
+# FIFO bilog crash-window suite
+# global-conf: conf/tentacle/rgw/rgw_multisite.yaml
+# Cluster deploy is expected to match tier-2_rgw_singlesite_to_multisite.yaml
+
+tests:
+
+  - test:
+      name: FIFO bilog crash windows
+      desc: orphaned FIFO ADD, OLH without FIFO entry, log-pool IO pause
+      polarion-id: TBD
+      module: sanity_rgw_multisite.py
+      clusters:
+        ceph-pri:
+          config:
+            script-name: test_bilog_fifo_crash.py
+            config-file-name: test_bilog_fifo_crash.yaml
+            timeout: 3600

@@ -1,0 +1,69 @@
+# FIFO bilog scale suite
+# global-conf: conf/tentacle/rgw/rgw_multisite.yaml
+# Cluster deploy is expected to match tier-2_rgw_singlesite_to_multisite.yaml
+# Long-running: 500k sync, 2h trim, reshard-under-write, active-active stress
+
+tests:
+
+  - test:
+      name: FIFO bilog scale throughput
+      desc: FIFO vs InIndex write throughput
+      polarion-id: TBD
+      module: sanity_rgw_multisite.py
+      clusters:
+        ceph-pri:
+          config:
+            script-name: test_bilog_fifo_scale.py
+            config-file-name: test_bilog_fifo_scale_throughput.yaml
+            timeout: 3600
+
+  - test:
+      name: FIFO bilog scale sync
+      desc: 500k full sync and incremental under write
+      polarion-id: TBD
+      module: sanity_rgw_multisite.py
+      clusters:
+        ceph-pri:
+          config:
+            script-name: test_bilog_fifo_scale.py
+            config-file-name: test_bilog_fifo_scale_sync.yaml
+            verify-io-on-site: ["ceph-sec"]
+            timeout: 21600
+
+  - test:
+      name: FIFO bilog scale trim
+      desc: 2h write plus autotrim and lagging secondary
+      polarion-id: TBD
+      module: sanity_rgw_multisite.py
+      clusters:
+        ceph-pri:
+          config:
+            script-name: test_bilog_fifo_scale.py
+            config-file-name: test_bilog_fifo_scale_trim.yaml
+            verify-io-on-site: ["ceph-sec"]
+            timeout: 10800
+
+  - test:
+      name: FIFO bilog scale reshard
+      desc: reshard under write and fifo shard bounds
+      polarion-id: TBD
+      module: sanity_rgw_multisite.py
+      clusters:
+        ceph-pri:
+          config:
+            script-name: test_bilog_fifo_scale.py
+            config-file-name: test_bilog_fifo_scale_reshard.yaml
+            timeout: 21600
+
+  - test:
+      name: FIFO bilog scale multizone
+      desc: active-active writes and disconnect reconnect
+      polarion-id: TBD
+      module: sanity_rgw_multisite.py
+      clusters:
+        ceph-pri:
+          config:
+            script-name: test_bilog_fifo_scale.py
+            config-file-name: test_bilog_fifo_scale_multizone.yaml
+            verify-io-on-site: ["ceph-sec"]
+            timeout: 7200

@@ -1,0 +1,180 @@
+# FIFO bilog functional suite
+# Requires a 2-zone RGW cluster. Use the same global-conf as other tentacle MS suites:
+# global-conf: conf/tentacle/rgw/rgw_multisite.yaml
+# Cluster deploy is expected to match tier-2_rgw_singlesite_to_multisite.yaml
+# (ceph-pri / ceph-sec). Tests run on the primary via sanity_rgw_multisite.py.
+
+tests:
+
+  - test:
+      name: FIFO bilog bucket creation
+      desc: FIFO default layout and shard bounds vs index shards
+      polarion-id: TBD
+      module: sanity_rgw_multisite.py
+      clusters:
+        ceph-pri:
+          config:
+            script-name: test_bilog_fifo.py
+            config-file-name: test_bilog_fifo_creation.yaml
+            timeout: 3600
+
+  - test:
+      name: FIFO bilog inindex default
+      desc: new bucket stays InIndex when config is inindex
+      polarion-id: TBD
+      module: sanity_rgw_multisite.py
+      clusters:
+        ceph-pri:
+          config:
+            script-name: test_bilog_fifo.py
+            config-file-name: test_bilog_fifo_inindex_default.yaml
+            timeout: 1800
+
+  - test:
+      name: FIFO bilog object ops
+      desc: PUT DELETE multipart mix produce FIFO bilog entries
+      polarion-id: TBD
+      module: sanity_rgw_multisite.py
+      clusters:
+        ceph-pri:
+          config:
+            script-name: test_bilog_fifo.py
+            config-file-name: test_bilog_fifo_object_ops.yaml
+            timeout: 1800
+
+  - test:
+      name: FIFO bilog versioned OLH
+      desc: OLH link epoch delete-marker unlink_instance
+      polarion-id: TBD
+      module: sanity_rgw_multisite.py
+      clusters:
+        ceph-pri:
+          config:
+            script-name: test_bilog_fifo.py
+            config-file-name: test_bilog_fifo_versioned.yaml
+            timeout: 1800
+
+  - test:
+      name: FIFO bilog versioned sync
+      desc: secondary versioned_epoch matches primary
+      polarion-id: TBD
+      module: sanity_rgw_multisite.py
+      clusters:
+        ceph-pri:
+          config:
+            script-name: test_bilog_fifo.py
+            config-file-name: test_bilog_fifo_versioned_sync.yaml
+            verify-io-on-site: ["ceph-sec"]
+            timeout: 3600
+
+  - test:
+      name: FIFO bilog CLI
+      desc: bilog list shard filter and trim
+      polarion-id: TBD
+      module: sanity_rgw_multisite.py
+      clusters:
+        ceph-pri:
+          config:
+            script-name: test_bilog_fifo.py
+            config-file-name: test_bilog_fifo_cli.yaml
+            timeout: 1800
+
+  - test:
+      name: FIFO bilog sync disable enable
+      desc: SYNCSTOP local writes RESYNC catch-up
+      polarion-id: TBD
+      module: sanity_rgw_multisite.py
+      clusters:
+        ceph-pri:
+          config:
+            script-name: test_bilog_fifo.py
+            config-file-name: test_bilog_fifo_sync_disable.yaml
+            verify-io-on-site: ["ceph-sec"]
+            timeout: 3600
+
+  - test:
+      name: FIFO bilog reshard
+      desc: FIFO reshard creates a new FIFO generation
+      polarion-id: TBD
+      module: sanity_rgw_multisite.py
+      clusters:
+        ceph-pri:
+          config:
+            script-name: test_bilog_fifo.py
+            config-file-name: test_bilog_fifo_reshard.yaml
+            timeout: 1800
+
+  - test:
+      name: FIFO bilog reshard upgrade
+      desc: InIndex bucket reshard upgrades gen1 to FIFO
+      polarion-id: TBD
+      module: sanity_rgw_multisite.py
+      clusters:
+        ceph-pri:
+          config:
+            script-name: test_bilog_fifo.py
+            config-file-name: test_bilog_fifo_reshard_upgrade.yaml
+            timeout: 1800
+
+  - test:
+      name: FIFO bilog reshard trim
+      desc: old FIFO generations removed after autotrim
+      polarion-id: TBD
+      module: sanity_rgw_multisite.py
+      clusters:
+        ceph-pri:
+          config:
+            script-name: test_bilog_fifo.py
+            config-file-name: test_bilog_fifo_reshard_trim.yaml
+            timeout: 3600
+
+  - test:
+      name: FIFO bilog index repair
+      desc: bucket check --fix emits FIFO ADD and DEL
+      polarion-id: TBD
+      module: sanity_rgw_multisite.py
+      clusters:
+        ceph-pri:
+          config:
+            script-name: test_bilog_fifo.py
+            config-file-name: test_bilog_fifo_index_repair.yaml
+            verify-io-on-site: ["ceph-sec"]
+            timeout: 3600
+
+  - test:
+      name: FIFO bilog multisite sync
+      desc: PUT full-sync outage and versioned OLH sync
+      polarion-id: TBD
+      module: sanity_rgw_multisite.py
+      clusters:
+        ceph-pri:
+          config:
+            script-name: test_bilog_fifo.py
+            config-file-name: test_bilog_fifo_multisite_sync.yaml
+            verify-io-on-site: ["ceph-sec"]
+            timeout: 7200
+
+  - test:
+      name: FIFO bilog trim lagging secondary
+      desc: autotrim must not drop unconsumed entries
+      polarion-id: TBD
+      module: sanity_rgw_multisite.py
+      clusters:
+        ceph-pri:
+          config:
+            script-name: test_bilog_fifo.py
+            config-file-name: test_bilog_fifo_trim_lagging.yaml
+            verify-io-on-site: ["ceph-sec"]
+            timeout: 7200
+
+  - test:
+      name: FIFO bilog inindex compat
+      desc: InIndex PUT DELETE versioned trim status still work
+      polarion-id: TBD
+      module: sanity_rgw_multisite.py
+      clusters:
+        ceph-pri:
+          config:
+            script-name: test_bilog_fifo.py
+            config-file-name: test_bilog_fifo_inindex_compat.yaml
+            timeout: 1800
